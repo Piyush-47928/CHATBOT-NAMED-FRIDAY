@@ -33,11 +33,14 @@ This project is ideal for beginners in Python, AI, and voice-based applications,
 ## 📁 **Project Structure**
 
 ```bash
-Friday-AI/
+CHATBOT-NAMED-FRIDAY/
 │
-├── friday.py          # Main Python script
+├── CHATBOT USING API.py 
+├── CHATBOT WITHOUT API.py
+├── FRIDAY WITH OPEN AI.py
 ├── README.md          # Project documentation
-└── requirements.txt   # Required libraries (recommended)
+└── CHATBOT USING SPACY.py
+
 ```
 
 ---
@@ -63,5 +66,3 @@ pip install pywin32 SpeechRecognition pygame pyaudio
 
 ##  👨‍💻 Author
 PIYUSH SHARMA | PYTHON DEVELOPER | B.TECH
-    Piyush Sharma
-  B.Tech Student | Robotics | AI | Embedded Systems
