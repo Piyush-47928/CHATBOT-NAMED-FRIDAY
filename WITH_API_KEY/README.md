@@ -28,7 +28,7 @@ A simple and powerful AI chatbot built using API integration. This chatbot takes
 ```bash
 WITH_API_KEY/
 │── FRIDAY1.py (It is in detailed manner and more precise version created)
-│── FRIDAY2.py (It is not much longer but cann do basic thing what a chatbot can do)
+│── FRIDAY2.py (It is not much longer but can do basic thing what a chatbot can do)
 │── README.md
 ```
 
