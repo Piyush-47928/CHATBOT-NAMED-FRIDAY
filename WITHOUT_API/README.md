@@ -42,4 +42,3 @@ WITHOUT_API/
 - Improve NLP with intent classification
 - Add more system controls (files, apps)
 
-## 📁 Project Structure
