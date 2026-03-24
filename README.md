@@ -1,4 +1,7 @@
 # 🤖 Friday A.I – Voice Assistant in Python
+![Python](https://img.shields.io/badge/Language-Python-yellow)
+![Status](https://img.shields.io/badge/Status-Active-success)
+
 
 Friday A.I is a Python-based voice assistant that can listen to your voice commands, respond using speech, open websites, tell the current time, perform Google searches, and even capture photos using your webcam.
 
