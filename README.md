@@ -38,11 +38,9 @@ This project is ideal for beginners in Python, AI, and voice-based applications,
 ```bash
 CHATBOT-NAMED-FRIDAY/
 │
-├── CHATBOT USING API.py 
-├── CHATBOT WITHOUT API.py
-├── FRIDAY WITH OPEN AI.py
-├── README.md          # Project documentation
-└── CHATBOT USING SPACY.py
+├── WITHOUT_API
+├── OPEN_API_KEY
+└── README.md          # Project documentation
 
 ```
 
