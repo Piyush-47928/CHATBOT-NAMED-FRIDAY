@@ -1,6 +1,6 @@
 # 🤖 Offline AI Chatbot (No API Key Required)
 ![Python](https://img.shields.io/badge/Language-Python-yellow)
-![Status](https://img.shields.io/badge/Status-Active-success)
+![Status](https://img.shields.io/badge/Status-Completed-success)
 
 An intelligent offline chatbot built using Python that performs tasks like opening the camera, launching web browsers, and understanding user input using NLP with spaCy — all without using any external API.
 
