@@ -1,0 +1,14 @@
+{"instruction":"Move forward","response":"{\"action\":\"MOVE\",\"direction\":\"FORWARD\",\"speed\":40}"}
+{"instruction":"Go forward","response":"{\"action\":\"MOVE\",\"direction\":\"FORWARD\",\"speed\":40}"}
+{"instruction":"Move straight ahead","response":"{\"action\":\"MOVE\",\"direction\":\"FORWARD\",\"speed\":40}"}
+{"instruction":"Proceed forward","response":"{\"action\":\"MOVE\",\"direction\":\"FORWARD\",\"speed\":40}"}
+{"instruction":"Move ahead slowly","response":"{\"action\":\"MOVE\",\"direction\":\"FORWARD\",\"speed\":20}"}
+{"instruction":"Move forward slowly","response":"{\"action\":\"MOVE\",\"direction\":\"FORWARD\",\"speed\":20}"}
+{"instruction":"Go backward","response":"{\"action\":\"MOVE\",\"direction\":\"BACKWARD\",\"speed\":40}"}
+{"instruction":"Move backward","response":"{\"action\":\"MOVE\",\"direction\":\"BACKWARD\",\"speed\":40}"}
+{"instruction":"Reverse slowly","response":"{\"action\":\"MOVE\",\"direction\":\"BACKWARD\",\"speed\":20}"}
+{"instruction":"Move backward slowly","response":"{\"action\":\"MOVE\",\"direction\":\"BACKWARD\",\"speed\":20}"}
+{"instruction":"Stop moving","response":"{\"action\":\"STOP\"}"}
+{"instruction":"Stop the robot","response":"{\"action\":\"STOP\"}"}
+{"instruction":"Halt","response":"{\"action\":\"STOP\"}"}
+{"instruction":"Emergency stop","response":"{\"action\":\"STOP\",\"reason\":\"EMERGENCY_STOP\"}"}

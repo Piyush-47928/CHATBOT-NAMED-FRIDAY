@@ -1,0 +1,5 @@
+{"instruction":"There is an obstacle very close in front of the robot","response":"{\"action\":\"STOP\",\"reason\":\"OBSTACLE_TOO_CLOSE\"}"}
+{"instruction":"An obstacle is 10 cm ahead","response":"{\"action\":\"STOP\",\"reason\":\"OBSTACLE_TOO_CLOSE\"}"}
+{"instruction":"The robot is about to hit a wall","response":"{\"action\":\"STOP\",\"reason\":\"COLLISION_RISK\"}"}
+{"instruction":"The front sensor detects a nearby object","response":"{\"action\":\"STOP\",\"reason\":\"OBSTACLE_TOO_CLOSE\"}"}
+{"instruction":"Stop because something is blocking the path","response":"{\"action\":\"STOP\",\"reason\":\"PATH_BLOCKED\"}"}

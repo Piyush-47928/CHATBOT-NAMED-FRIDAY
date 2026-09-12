@@ -1,0 +1,9 @@
+{"instruction":"Check the distance in front of the robot","response":"{\"action\":\"GET_DISTANCE\"}"}
+{"instruction":"How far is the obstacle?","response":"{\"action\":\"GET_DISTANCE\"}"}
+{"instruction":"Measure the front distance","response":"{\"action\":\"GET_DISTANCE\"}"}
+{"instruction":"Check the battery","response":"{\"action\":\"GET_BATTERY\"}"}
+{"instruction":"What is the battery level?","response":"{\"action\":\"GET_BATTERY\"}"}
+{"instruction":"Tell me the current battery status","response":"{\"action\":\"GET_BATTERY\"}"}
+{"instruction":"Look around","response":"{\"action\":\"LOOK\"}"}
+{"instruction":"Check your surroundings","response":"{\"action\":\"LOOK\"}"}
+{"instruction":"Scan the environment","response":"{\"action\":\"LOOK\"}"}
