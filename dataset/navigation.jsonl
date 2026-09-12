@@ -1,0 +1,10 @@
+{"instruction":"Turn left","response":"{\"action\":\"TURN\",\"direction\":\"LEFT\",\"angle\":90}"}
+{"instruction":"Turn right","response":"{\"action\":\"TURN\",\"direction\":\"RIGHT\",\"angle\":90}"}
+{"instruction":"Rotate left","response":"{\"action\":\"TURN\",\"direction\":\"LEFT\",\"angle\":90}"}
+{"instruction":"Rotate right","response":"{\"action\":\"TURN\",\"direction\":\"RIGHT\",\"angle\":90}"}
+{"instruction":"Turn left 45 degrees","response":"{\"action\":\"TURN\",\"direction\":\"LEFT\",\"angle\":45}"}
+{"instruction":"Turn right 45 degrees","response":"{\"action\":\"TURN\",\"direction\":\"RIGHT\",\"angle\":45}"}
+{"instruction":"Make a 180 degree left turn","response":"{\"action\":\"TURN\",\"direction\":\"LEFT\",\"angle\":180}"}
+{"instruction":"Make a 180 degree right turn","response":"{\"action\":\"TURN\",\"direction\":\"RIGHT\",\"angle\":180}"}
+{"instruction":"Rotate 90 degrees clockwise","response":"{\"action\":\"TURN\",\"direction\":\"RIGHT\",\"angle\":90}"}
+{"instruction":"Rotate 90 degrees anticlockwise","response":"{\"action\":\"TURN\",\"direction\":\"LEFT\",\"angle\":90}"}
