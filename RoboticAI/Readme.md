@@ -1,4 +1,8 @@
 # 🤖 RobotAI
+![Python](https://img.shields.io/badge/Language-Python-yellow)
+![Status](https://img.shields.io/badge/Status-Active-success)
+
+
 
 > **A local LLM-powered robotic intelligence system for safe, structured, and autonomous robot control.**
 
