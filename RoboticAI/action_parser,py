@@ -1,0 +1,314 @@
+import json
+import math
+
+
+# ============================================================
+# Allowed Robot Actions
+# ============================================================
+
+ALLOWED_ACTIONS = {
+    "MOVE",
+    "TURN",
+    "STOP",
+    "LOOK",
+    "GET_DISTANCE",
+    "GET_BATTERY",
+    "SPEAK",
+    "WAIT",
+}
+
+
+def _is_number(value):
+    """Return True only for finite int/float values, not bool."""
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(float(value))
+    )
+
+
+# ============================================================
+# Extract JSON from LLM Response
+# ============================================================
+
+def extract_json(text):
+    """
+    Extract the robot action JSON object from an LLM response.
+
+    The old implementation used the first '{' and the last '}',
+    which could accidentally combine STATE JSON with the action JSON.
+    This version scans balanced JSON objects and selects the object
+    that actually contains an 'action' field.
+    """
+    if not isinstance(text, str) or not text.strip():
+        return None
+
+    text = text.strip()
+
+    decoder = json.JSONDecoder()
+    candidates = []
+    position = 0
+
+    while position < len(text):
+        start = text.find("{", position)
+        if start == -1:
+            break
+
+        try:
+            obj, end = decoder.raw_decode(text[start:])
+        except json.JSONDecodeError:
+            position = start + 1
+            continue
+
+        if isinstance(obj, dict):
+            candidates.append(obj)
+
+        position = start + end
+
+    action_candidates = [
+        obj for obj in candidates
+        if isinstance(obj.get("action"), str)
+    ]
+
+    if len(action_candidates) == 1:
+        return action_candidates[0]
+
+    if len(action_candidates) > 1:
+        # The controller requires exactly one executable action.
+        return None
+
+    return None
+
+
+# ============================================================
+# Normalize Robot Action
+# ============================================================
+
+def normalize_action(action):
+    if not isinstance(action, dict):
+        return action
+
+    normalized = dict(action)
+
+    if "action" in normalized:
+        normalized["action"] = str(normalized["action"]).strip().upper()
+
+    if "direction" in normalized:
+        normalized["direction"] = str(normalized["direction"]).strip().upper()
+
+    return normalized
+
+
+# ============================================================
+# Validate Robot Action
+# ============================================================
+
+def validate_action(action):
+    """Validate and normalize one robot action IN PLACE.
+
+    Mutates `action` directly so that any default value filled in
+    here (speed, angle, duration, direction) is visible to the
+    caller — including safety_check(), which must see the same
+    values execute_robot() will actually use.
+
+    Returns:
+        (True, "OK") for a valid action
+        (False, reason) for an invalid action
+    """
+    if not isinstance(action, dict):
+        return False, "Action is not a JSON object"
+
+    if "action" not in action:
+        return False, "Missing action field"
+
+    action["action"] = str(action["action"]).strip().upper()
+    if "direction" in action:
+        action["direction"] = str(action["direction"]).strip().upper()
+
+    action_type = action["action"]
+
+    if action_type not in ALLOWED_ACTIONS:
+        return False, f"Unknown action: {action_type}"
+
+    # --------------------------------------------------------
+    # MOVE validation
+    # --------------------------------------------------------
+    if action_type == "MOVE":
+        if action.get("direction") not in {"FORWARD", "BACKWARD"}:
+            return False, "Invalid MOVE direction"
+
+        speed = action.get("speed", 40)
+        if not _is_number(speed):
+            return False, "Invalid speed"
+
+        if speed < 0 or speed > 60:
+            return False, "Speed must be between 0 and 60"
+
+        action["speed"] = speed
+
+    # --------------------------------------------------------
+    # TURN validation
+    # --------------------------------------------------------
+    elif action_type == "TURN":
+        if action.get("direction") not in {"LEFT", "RIGHT"}:
+            return False, "Invalid TURN direction"
+
+        angle = action.get("angle", 90)
+        if not _is_number(angle):
+            return False, "Invalid turn angle"
+
+        if angle < 0 or angle > 360:
+            return False, "Turn angle must be between 0 and 360"
+
+        action["angle"] = angle
+
+    # --------------------------------------------------------
+    # STOP validation
+    # --------------------------------------------------------
+    elif action_type == "STOP":
+        if "reason" in action:
+            action["reason"] = str(action["reason"])
+
+    # --------------------------------------------------------
+    # LOOK validation
+    # --------------------------------------------------------
+    elif action_type == "LOOK":
+        pass
+
+    # --------------------------------------------------------
+    # GET_DISTANCE validation
+    # --------------------------------------------------------
+    elif action_type == "GET_DISTANCE":
+        direction = str(action.get("direction", "FRONT")).upper()
+
+        if direction not in {"FRONT", "LEFT", "RIGHT"}:
+            return False, "Invalid distance direction"
+
+        action["direction"] = direction
+
+    # --------------------------------------------------------
+    # GET_BATTERY validation
+    # --------------------------------------------------------
+    elif action_type == "GET_BATTERY":
+        pass
+
+    # --------------------------------------------------------
+    # SPEAK validation
+    # --------------------------------------------------------
+    elif action_type == "SPEAK":
+        if "text" not in action:
+            return False, "Missing speech text"
+
+        action["text"] = str(action["text"])
+
+    # --------------------------------------------------------
+    # WAIT validation
+    # --------------------------------------------------------
+    elif action_type == "WAIT":
+        allowed_fields = {"action", "duration"}
+        unexpected = set(action.keys()) - allowed_fields
+
+        if unexpected:
+            return False, f"Unexpected field(s) for WAIT: {', '.join(sorted(unexpected))}"
+
+        duration = action.get("duration", 1)
+
+        if not _is_number(duration):
+            return False, "Invalid wait duration"
+
+        if duration < 0 or duration > 10:
+            return False, "Wait duration must be between 0 and 10 seconds"
+
+        action["duration"] = duration
+
+    return True, "OK"
+
+# ============================================================
+# Main Parser
+# ============================================================
+
+def parse_response(text):
+    action = extract_json(text)
+
+    if action is None:
+        return None, "No unique robot action JSON found"
+
+    action = normalize_action(action)
+
+    valid, message = validate_action(action)
+
+    if not valid:
+        return None, message
+
+    return action, message
+
+
+# ============================================================
+# Self Test
+# ============================================================
+
+if __name__ == "__main__":
+    tests = [
+        (
+            '{"action":"MOVE","direction":"FORWARD","speed":40}',
+            True,
+        ),
+        (
+            '{"action":"move","direction":"forward"}',
+            True,
+        ),
+        (
+            '{"action":"TURN","direction":"left","angle":90}',
+            True,
+        ),
+        (
+            '{"action":"STOP"}',
+            True,
+        ),
+        (
+            'STATE: {"battery":100}\nCOMMAND: Move\n{"action":"MOVE","direction":"FORWARD","speed":40}',
+            True,
+        ),
+        (
+            '```json\n{"action":"STOP","reason":"TEST"}\n```',
+            True,
+        ),
+        (
+            '{"action":"MOVE","direction":"FORWARD","speed":100}',
+            False,
+        ),
+        (
+            '{"action":"MOVE","direction":"FORWARD","speed":"40"}',
+            False,
+        ),
+        (
+            '{"action":"TURN","direction":"LEFT","angle":361}',
+            False,
+        ),
+        (
+            '{"action":"MOVE","direction":"FORWARD","speed":0-60}',
+            False,
+        ),
+        (
+            '{"action":"WAIT","duration":2}',
+            True,
+        ),
+        (
+            '{"action":"WAIT","seconds":2}',
+            False,
+        ),
+    ]
+
+    passed = 0
+    for index, (test, expected_valid) in enumerate(tests, 1):
+        action, message = parse_response(test)
+        actual_valid = action is not None
+        ok = actual_valid == expected_valid
+        passed += ok
+        print(f"TEST {index}: {'PASS' if ok else 'FAIL'}")
+        print("  input :", test)
+        print("  action:", action)
+        print("  msg   :", message)
+
+    print(f"\n{passed}/{len(tests)} parser tests passed")
+    raise SystemExit(0 if passed == len(tests) else 1)
